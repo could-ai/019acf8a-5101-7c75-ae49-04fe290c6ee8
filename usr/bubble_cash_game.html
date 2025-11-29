@@ -1,0 +1,275 @@
+&lt;!DOCTYPE html&gt;
+&lt;html lang="ar" dir="rtl"&gt;
+&lt;head&gt;
+    &lt;meta charset="UTF-8"&gt;
+    &lt;meta name="viewport" content="width=device-width, initial-scale=1.0"&gt;
+    &lt;title&gt;Bubble Cash - العب واربح&lt;/title&gt;
+    &lt;style&gt;
+        body {
+            margin: 0;
+            padding: 0;
+            font-family: Arial, sans-serif;
+            background: linear-gradient(135deg, #0A192F, #172A46);
+            color: white;
+            overflow-x: hidden;
+        }
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        .screen {
+            display: none;
+        }
+        .screen.active {
+            display: block;
+        }
+        .button {
+            background: #00BFFF;
+            color: black;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 5px;
+            cursor: pointer;
+            margin: 5px;
+        }
+        .button:hover {
+            background: #0099CC;
+        }
+        .card {
+            background: rgba(255, 255, 255, 0.1);
+            padding: 15px;
+            margin: 10px 0;
+            border-radius: 10px;
+            backdrop-filter: blur(10px);
+        }
+        .progress-bar {
+            width: 100%;
+            height: 20px;
+            background: #555;
+            border-radius: 10px;
+            overflow: hidden;
+        }
+        .progress-fill {
+            height: 100%;
+            background: #00BFFF;
+            width: 30%;
+        }
+        canvas {
+            border: 2px solid #00BFFF;
+            background: #000;
+            display: block;
+            margin: 0 auto;
+        }
+        .stats {
+            display: flex;
+            justify-content: space-around;
+            margin: 10px 0;
+        }
+        .stat {
+            text-align: center;
+        }
+        .note {
+            font-size: 12px;
+            color: #aaa;
+            margin-top: 20px;
+        }
+    &lt;/style&gt;
+&lt;/head&gt;
+&lt;body&gt;
+    &lt;div id="app"&gt;
+        &lt;!-- Home Screen --&gt;
+        &lt;div id="home" class="screen active container"&gt;
+            &lt;h1&gt;Bubble Cash - العب واربح&lt;/h1&gt;
+            &lt;p&gt;اضغط على الشاشة لإطلاق النار وتفجير الفقاعات!&lt;/p&gt;
+            &lt;button class="button" onclick="showScreen('game')"&gt;ابدأ اللعب&lt;/button&gt;
+            &lt;button class="button" onclick="showScreen('rewards')"&gt;المكافآت اليومية&lt;/button&gt;
+            &lt;button class="button" onclick="showScreen('missions')"&gt;المهام والتحديات&lt;/button&gt;
+            &lt;button class="button" onclick="showScreen('ships')"&gt;اختر سفينتك&lt;/button&gt;
+            &lt;button class="button" onclick="showScreen('achievements')"&gt;الإنجازات&lt;/button&gt;
+            &lt;button class="button" onclick="showScreen('leaderboard')"&gt;لوحة الصدارة&lt;/button&gt;
+            &lt;button class="button" onclick="showScreen('store')"&gt;المتجر&lt;/button&gt;
+            &lt;button class="button" onclick="showScreen('redeem')"&gt;استرداد المكافآت&lt;/button&gt;
+            &lt;button class="button" onclick="showScreen('admin')"&gt;لوحة الإدارة&lt;/button&gt;
+        &lt;/div&gt;
+
+        &lt;!-- Game Screen --&gt;
+        &lt;div id="game" class="screen container"&gt;
+            &lt;h2&gt;المستوى: &lt;span id="level"&gt;1&lt;/span&gt; - النقاط: &lt;span id="score"&gt;0&lt;/span&gt;&lt;/h2&gt;
+            &lt;canvas id="gameCanvas" width="400" height="600"&gt;&lt;/canvas&gt;
+            &lt;p&gt;اضغط على الفقاعات لتفجيرها!&lt;/p&gt;
+            &lt;button class="button" onclick="showScreen('home')"&gt;العودة&lt;/button&gt;
+        &lt;/div&gt;
+
+        &lt;!-- Rewards Screen --&gt;
+        &lt;div id="rewards" class="screen container"&gt;
+            &lt;h2&gt;المكافآت اليومية&lt;/h2&gt;
+            &lt;p&gt;قم بتسجيل الدخول يوميًا لجمع المكافآت!&lt;/p&gt;
+            &lt;div class="card"&gt;&lt;p&gt;اليوم 1: 100 عملة&lt;/p&gt;&lt;button class="button"&gt;اجمع&lt;/button&gt;&lt;/div&gt;
+            &lt;div class="card"&gt;&lt;p&gt;اليوم 2: 150 عملة + 5 جواهر&lt;/p&gt;&lt;button class="button"&gt;اجمع&lt;/button&gt;&lt;/div&gt;
+            &lt;!-- إضافة المزيد من الأيام هنا --&gt;
+            &lt;button class="button" onclick="showScreen('home')"&gt;العودة&lt;/button&gt;
+        &lt;/div&gt;
+
+        &lt;!-- Missions Screen --&gt;
+        &lt;div id="missions" class="screen container"&gt;
+            &lt;h2&gt;المهام والتحديات&lt;/h2&gt;
+            &lt;div class="card"&gt;
+                &lt;p&gt;ماستر النتيجة: الوصول إلى 5000 نقطة&lt;/p&gt;
+                &lt;div class="progress-bar"&gt;&lt;div class="progress-fill"&gt;&lt;/div&gt;&lt;/div&gt;
+                &lt;p&gt;+500 عملة, +10 جواهر&lt;/p&gt;
+            &lt;/div&gt;
+            &lt;!-- إضافة المزيد من المهام --&gt;
+            &lt;button class="button" onclick="showScreen('home')"&gt;العودة&lt;/button&gt;
+        &lt;/div&gt;
+
+        &lt;!-- Ships Screen --&gt;
+        &lt;div id="ships" class="screen container"&gt;
+            &lt;h2&gt;اختر سفينتك&lt;/h2&gt;
+            &lt;div class="card"&gt;
+                &lt;h3&gt;مقاتل&lt;/h3&gt;
+                &lt;p&gt;سرعة: 8/10, القوة النارية: 6/10, الدفاع: 4/10&lt;/p&gt;
+                &lt;p&gt;خاص: انفجار ناري سريع&lt;/p&gt;
+                &lt;button class="button"&gt;اختر&lt;/button&gt;
+            &lt;/div&gt;
+            &lt;!-- إضافة المزيد من السفن --&lt;button class="button" onclick="showScreen('home')"&gt;العودة&lt;/button&gt;
+        &lt;/div&gt;
+
+        &lt;!-- Achievements Screen --&gt;
+        &lt;div id="achievements" class="screen container"&gt;
+            &lt;h2&gt;الإنجازات&lt;/h2&gt;
+            &lt;div class="card"&gt;&lt;p&gt;مبتدئ الفقاعات (مكتمل)&lt;/p&gt;&lt;/div&gt;
+            &lt;div class="card"&gt;&lt;p&gt;مدمر 1000 فقاعة&lt;/p&gt;&lt;/div&gt;
+            &lt;button class="button" onclick="showScreen('home')"&gt;العودة&lt;/button&gt;
+        &lt;/div&gt;
+
+        &lt;!-- Leaderboard Screen --&gt;
+        &lt;div id="leaderboard" class="screen container"&gt;
+            &lt;h2&gt;لوحة الصدارة&lt;/h2&gt;
+            &lt;p&gt;1. PlayerOne - 150230&lt;/p&gt;
+            &lt;p&gt;2. ProGamer - 145800&lt;/p&gt;
+            &lt;button class="button" onclick="showScreen('home')"&gt;العودة&lt;/button&gt;
+        &lt;/div&gt;
+
+        &lt;!-- Store Screen --&gt;
+        &lt;div id="store" class="screen container"&gt;
+            &lt;h2&gt;المتجر&lt;/h2&gt;
+            &lt;div class="card"&gt;&lt;p&gt;Tank Ship - 5000 عملة&lt;/p&gt;&lt;button class="button"&gt;شراء&lt;/button&gt;&lt;/div&gt;
+            &lt;!-- إضافة المزيد من العناصر --&gt;
+            &lt;button class="button" onclick="showScreen('home')"&gt;العودة&lt;/button&gt;
+        &lt;/div&gt;
+
+        &lt;!-- Redeem Screen --&gt;
+        &lt;div id="redeem" class="screen container"&gt;
+            &lt;h2&gt;استرداد المكافآت&lt;/h2&gt;
+            &lt;p&gt;تم إرسال طلب الاسترداد! سيتم معالجة الدفع خلال 24 ساعة.&lt;/p&gt;
+            &lt;button class="button" onclick="showScreen('home')"&gt;العودة&lt;/button&gt;
+        &lt;/div&gt;
+
+        &lt;!-- Admin Screen --&gt;
+        &lt;div id="admin" class="screen container"&gt;
+            &lt;h2&gt;لوحة الإدارة&lt;/h2&gt;
+            &lt;div class="card"&gt;
+                &lt;h3&gt;شحن العملة للاعب&lt;/h3&gt;
+                &lt;input type="text" placeholder="اسم المستخدم"&gt;
+                &lt;input type="number" placeholder="عملات"&gt;
+                &lt;button class="button"&gt;شحن&lt;/button&gt;
+            &lt;/div&gt;
+            &lt;button class="button" onclick="showScreen('home')"&gt;العودة&lt;/button&gt;
+        &lt;/div&gt;
+    &lt;/div&gt;
+
+    &lt;div class="note"&gt;
+        ملاحظات: هذا MVP محلي فقط. لا مدفوعات حقيقية، لا خوادم، كل شيء محفوظ في localStorage. للعب، اضغط على الفقاعات في اللعبة. استخدم الأسهم للتنقل بين الشاشات.
+    &lt;/div&gt;
+
+    &lt;script&gt;
+        // JavaScript للمنطق
+        let currentScreen = 'home';
+        let gameData = {
+            score: 0,
+            level: 1,
+            bubbles: [],
+            coins: 1000,
+            gems: 50
+        };
+
+        function showScreen(screenId) {
+            document.querySelectorAll('.screen').forEach(s =&gt; s.classList.remove('active'));
+            document.getElementById(screenId).classList.add('active');
+            currentScreen = screenId;
+            if (screenId === 'game') startGame();
+        }
+
+        // Game Logic
+        const canvas = document.getElementById('gameCanvas');
+        const ctx = canvas.getContext('2d');
+
+        function startGame() {
+            gameData.bubbles = [];
+            for (let i = 0; i &lt; 10; i++) {
+                gameData.bubbles.push({
+                    x: Math.random() * canvas.width,
+                    y: Math.random() * canvas.height,
+                    radius: 20,
+                    color: `hsl(${Math.random() * 360}, 70%, 50%)`,
+                    speed: 1
+                });
+            }
+            drawGame();
+        }
+
+        function drawGame() {
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            gameData.bubbles.forEach(bubble =&gt; {
+                ctx.beginPath();
+                ctx.arc(bubble.x, bubble.y, bubble.radius, 0, Math.PI * 2);
+                ctx.fillStyle = bubble.color;
+                ctx.fill();
+                bubble.y -= bubble.speed;
+                if (bubble.y &lt; 0) bubble.y = canvas.height;
+            });
+            document.getElementById('score').textContent = gameData.score;
+            document.getElementById('level').textContent = gameData.level;
+            requestAnimationFrame(drawGame);
+        }
+
+        canvas.addEventListener('click', (e) =&gt; {
+            const rect = canvas.getBoundingClientRect();
+            const clickX = e.clientX - rect.left;
+            const clickY = e.clientY - rect.top;
+            gameData.bubbles = gameData.bubbles.filter(bubble =&gt; {
+                const dist = Math.sqrt((clickX - bubble.x) ** 2 + (clickY - bubble.y) ** 2);
+                if (dist &lt; bubble.radius) {
+                    gameData.score += 10;
+                    return false;
+                }
+                return true;
+            });
+            if (gameData.bubbles.length === 0) {
+                gameData.level++;
+                startGame();
+            }
+        });
+
+        // Keyboard Controls
+        document.addEventListener('keydown', (e) =&gt; {
+            if (e.key === 'ArrowUp') showScreen('rewards');
+            else if (e.key === 'ArrowDown') showScreen('missions');
+            else if (e.key === 'ArrowLeft') showScreen('ships');
+            else if (e.key === 'ArrowRight') showScreen('achievements');
+        });
+
+        // Load/Save Data
+        function loadData() {
+            const saved = localStorage.getItem('bubbleCashData');
+            if (saved) gameData = JSON.parse(saved);
+        }
+        function saveData() {
+            localStorage.setItem('bubbleCashData', JSON.stringify(gameData));
+        }
+        window.addEventListener('beforeunload', saveData);
+        loadData();
+    &lt;/script&gt;
+&lt;/body&gt;
+&lt;/html&gt;
